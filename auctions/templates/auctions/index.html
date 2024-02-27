@@ -1,0 +1,21 @@
+{% extends "auctions/layout.html" %}
+{% block body %}
+    <h2>Active Listings</h2>
+        <div style="display: grid; grid-template-columns: 100%;">
+            {% for listing in listings %}
+                {% if listing.closed == False %}
+                    <div style="margin-top: 2%; margin-left: 2%; margin-right: 2%; border: 1px solid gray; padding: 2%; border-radius: 3px;">
+                        {% if listing.image_url %}
+                            <img src="{{listing.image_url}}" alt="{{listing.title}}" width="10%" style="float: left;  margin-right: 100px;">
+                        {% else %}
+                            <img src="https://www.rightclickit.com.au/wp-content/uploads/2018/09/Image-Coming-Soon-ECC.png" alt="{{listing.title}}" width="10%" style="float: left;  margin-right: 100px;">
+                        {% endif %}
+                        <a href="{% url 'listing' listing.id %}"><h3>{{listing.item_name}}</h3></a>
+                        <h5>${{listing.price}}</h5>
+                        <h6>{{listing.item_description}}</h6>
+                        <h6 style="color: gray;">Created: {{listing.date}}</h6>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+{% endblock %}

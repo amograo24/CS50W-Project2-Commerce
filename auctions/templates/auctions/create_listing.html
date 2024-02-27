@@ -1,0 +1,19 @@
+{% extends "auctions/layout.html" %}
+{% block title %}New Listing{% endblock %}
+{% block body %}
+    {% if message %}
+        {{message}}
+    {% endif %}
+    {% if user.is_authenticated %}
+        {% if error %}
+            <h2 style="color: red; background-color: rgb(255, 203, 203); width: 55%; padding: 6px; border-radius: 10px;">{{error}}</h2>
+        {% endif %}
+        <form action="{% url 'new' %}" method="POST">
+            {% csrf_token %}
+            {{content_listing}}
+            <div><input class="button" style="margin-top: 10px; background-color: #1a73e8;" type="submit"></div>
+        </form>
+    {% else %}
+        <h1>Login to create a listing!</h1>
+    {% endif %}
+{% endblock %}

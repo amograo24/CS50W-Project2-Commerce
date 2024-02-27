@@ -1,0 +1,98 @@
+{% extends "auctions/layout.html" %}
+{% block title %}{{listing.item_name}}{% endblock %}
+{% block body %}
+    {% if listing.closed == True %}
+        {% if listing.previous_bidder == request.user %}
+        <section style="background-color: rgba(136, 247, 136, 0.349); border-radius: 10px; padding: 10px;"><h2 style=" color: rgb(20, 99, 24);">Congrats! You have won the auction for '{{listing.item_name}}'</h2></section>
+            <br>
+        {% endif %}
+    {% endif %}
+    {% if listing in user_watchlist.listings.all %}
+        <h6 style="background-color: black; color: white; padding: 5px; width: 80px; border-radius: 4px;">Watchlist</h6>
+    {% endif %}
+    {% if error %}
+        <h2 style="color: red; background-color: rgb(255, 203, 203); width: 55%; padding: 6px; border-radius: 10px;">{{error}}</h2>
+    {% endif %}
+    {% if listing.closed == True %}
+            <h3 style="color: red">The auction for this item is closed!</h3>
+    {% endif %}
+    <div style="display: grid; grid-template-columns: 100%;">
+            <div style="margin-top: 2%; margin-left: 2%; margin-right: 2%; border: 1px solid gray; padding: 2%; border-radius: 3px;">
+                {% if listing.image_url %}    
+                    <img class="list_details" src="{{listing.image_url}}" alt="{{listing.title}}" width="20%" style="float: left;  margin-right: 100px;">
+                {% else %}
+                    <img src="https://www.rightclickit.com.au/wp-content/uploads/2018/09/Image-Coming-Soon-ECC.png" alt="{{listing.title}}" width="20%" style="float: left;  margin-right: 100px;">
+                {% endif %}
+                <h1 class="list_details">{{listing.item_name}}</h1>
+                {% if listing.closed == False %}
+                    <h3 class="list_details" style="color: rgb(24, 224, 24);">${{listing.price}}</h3>
+                {% else %}
+                    <h3 class="list_details" style="color: rgb(24, 224, 24);">Sold for ${{listing.price}}</h3>
+                {% endif %}
+                {% if listing.item_category %} 
+                    <h5 class="list_details">Category: {{listing.item_category}}</h5>
+                {% else %}
+                    <h5 class="list_details">Category: No Category Listed</h5>
+                {% endif %}
+                <h6 class="list_details">Created by: {{listing.creator}} on {{listing.date}}</h6>
+                <h6>{{bid_count}} Bid(s) so far.</h6>
+            </div>
+    </div>
+    <br>
+    <h3 class="description">Item Description</h3>
+    <h5 class="description">{{listing.item_description}}</h5>
+    <hr>
+    {% if listing.previous_bidder %}
+        <h5 style="color: blue;">Latest bid by {{listing.previous_bidder}}</h5>
+    {% else %}
+        <h5 style="color: blue;">Be the fist one to bid!</h5>
+    {% endif %}
+    {% if user.is_authenticated %}
+        {% if listing.closed == False %}
+            <form action="{% url 'listing' listing.id %}" method="POST">
+                {% csrf_token %}
+                {{content_bidding}}
+                <input type="submit" value="Bid" class="button">
+            </form>
+        {% endif %}
+        <form action="{% url 'addcomment' listing.id %}" method="POST">
+            {% csrf_token %}
+            <label>Add comment:</label>
+            <textarea name="comment" id="id_comment" required></textarea>
+            <input type="submit" class="button" value="Post">
+        </form>
+        <form action="{% url 'adddelwl' listing.id %}" method="POST">
+            {% csrf_token %}
+            {% if listing not in user_watchlist.listings.all %}
+                <input type="submit" class="button" value="Add to Watchlist" style="display: block;">
+            {% else %}
+                <input type="submit" class="button" value="Delete from Watchlist" style="display: block;">
+            {% endif %}
+        </form>
+            {% if listing.creator == request.user %}
+                {% if listing.closed == False %}
+                    <br>
+                    <form action="{% url 'closelisting' listing.id %}" method="POST">
+                        {% csrf_token %}
+                        <button id="close" type="submit">Close Auction for this Listing</button>
+                    </form>
+                {% endif %}
+            {% endif %}
+    {% else %}
+        <h1>Login to bid!</h1>
+    {% endif %}
+    <hr>
+    {% if comments_of_this_listing.exists %}
+        <h2>Comments:</h2>
+    {% endif %}
+    <div style="display: grid; grid-template-columns: 100%;">
+        {% for comment in comments_of_this_listing %}
+            <div style="margin-top: 2%; margin-right: 20%; border: 1px solid gray; padding: 0.75%; border-radius: 3px;">
+                <h6 style="color: gray;">By {{comment.commenter}} on {{comment.time_of_comment}}</h6>
+                <h5>{{comment.comment}}</h5>
+            </div>
+        {% endfor %}
+    </div>
+
+    
+{% endblock %}

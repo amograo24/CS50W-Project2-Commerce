@@ -1,0 +1,55 @@
+body {
+    padding: 10px;
+}
+
+#id_item_name, #id_item_description, #id_image_url, #id_starting_bid, #id_item_category {
+    width: 50%;
+    margin-top: 2px;
+    margin-bottom: 15px;
+}
+
+label {
+    width: 100%;
+}
+
+.list_details {
+    margin-bottom: 15px;
+}
+
+.description {
+    margin-left: 2%;
+    margin-right: 20%;
+    padding-top: 10px;
+}
+
+#id_bid,#id_comment {
+    width: 50%;
+    margin-top: 2px;
+    margin-bottom: 15px;
+}
+
+.button {
+    background-color: black;
+    border: black;
+    color: white;
+    height: 36px;
+    font-family: arial,sans-serif;
+    padding-left: 16px;
+    padding-right: 16px;
+    border-radius: 4px;
+}
+
+#close {
+    background-color: crimson;
+    border: crimson;
+    color: white;
+    height: 36px;
+    font-family: arial,sans-serif;
+    padding-left: 16px;
+    padding-right: 16px;
+    border-radius: 4px;
+}
+
+.category_in_list {
+    padding: 20px;
+}
